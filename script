@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Variables
+GITHUB_REPO="your-github-username/your-repo-name"
+IMAGE_NAME="haweb"
+DOCKERFILE_PATH="path/to/your/Dockerfile"
+CONTAINER_NAME="your-container-name"
+
+# Pull the latest code from GitHub
+git clone https://github.com/$GITHUB_REPO.git
+
+# Stop and remove the existing container (if it exists)
+if docker ps -a | grep -q $CONTAINER_NAME; then
+    docker stop $CONTAINER_NAME
+    docker rm $CONTAINER_NAME
+fi
+
+# Build the Docker image
+docker build -t $IMAGE_NAME -f $DOCKERFILE_PATH .
+
+# Run the Docker container
+docker run -d --name $CONTAINER_NAME -p 8080:80 $IMAGE_NAME
+
+# Clean up: Remove the cloned code (optional)
+rm -rf your-repo-name
